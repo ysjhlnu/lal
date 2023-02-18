@@ -1,5 +1,5 @@
 // Copyright 2022, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,13 +11,13 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/rtsp"
+	"github.com/ysjhlnu/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/rtsp"
 	"github.com/q191201771/naza/pkg/nazalog"
 	"strings"
 	"time"
 
-	"github.com/q191201771/lal/pkg/rtmp"
+	"github.com/ysjhlnu/lal/pkg/rtmp"
 )
 
 // StartPull 外部命令主动触发pull拉流

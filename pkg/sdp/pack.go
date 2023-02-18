@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -16,9 +16,9 @@ import (
 
 	"github.com/q191201771/naza/pkg/nazaerrors"
 
-	"github.com/q191201771/lal/pkg/aac"
+	"github.com/ysjhlnu/lal/pkg/aac"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 )
 
 func Pack(vps, sps, pps, asc []byte) (ctx LogicContext, err error) {

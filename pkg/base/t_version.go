@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -31,11 +31,11 @@ const HttpWebUiVersion = "v0.0.2"
 
 var (
 	LalLibraryName = "lal"
-	LalGithubRepo  = "github.com/q191201771/lal"
-	LalGithubSite  = "https://github.com/q191201771/lal"
+	LalGithubRepo  = "github.com/ysjhlnu/lal"
+	LalGithubSite  = "https://github.com/ysjhlnu/lal"
 	LalDocSite     = "https://pengrl.com/lal"
 
-	// LalFullInfo e.g. lal v0.12.3 (github.com/q191201771/lal)
+	// LalFullInfo e.g. lal v0.12.3 (github.com/ysjhlnu/lal)
 	LalFullInfo = LalLibraryName + " " + LalVersion + " (" + LalGithubRepo + ")"
 
 	// LalVersionDot e.g. 0.12.3
@@ -47,7 +47,7 @@ var (
 
 var (
 	// LalRtmpHandshakeWaterMark 植入rtmp握手随机字符串中
-	// e.g. lal v0.12.3 (github.com/q191201771/lal)
+	// e.g. lal v0.12.3 (github.com/ysjhlnu/lal)
 	LalRtmpHandshakeWaterMark string
 
 	// LalRtmpConnectResultVersion 植入rtmp server中的connect result信令中

@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -13,24 +13,24 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	"github.com/q191201771/lal/pkg/aac"
+	"github.com/ysjhlnu/lal/pkg/aac"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/q191201771/naza/pkg/nazabytes"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 
-	"github.com/q191201771/lal/pkg/rtmp"
+	"github.com/ysjhlnu/lal/pkg/rtmp"
 
-	"github.com/q191201771/lal/pkg/avc"
-	"github.com/q191201771/lal/pkg/hevc"
 	"github.com/q191201771/naza/pkg/bele"
 	"github.com/q191201771/naza/pkg/bitrate"
+	"github.com/ysjhlnu/lal/pkg/avc"
+	"github.com/ysjhlnu/lal/pkg/hevc"
 
-	"github.com/q191201771/lal/pkg/httpflv"
 	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/ysjhlnu/lal/pkg/httpflv"
 )
 
 // 分析诊断HTTP-FLV流以及FLV文件的小工具。

@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -10,16 +10,16 @@ package remux
 
 import (
 	"encoding/hex"
-	"github.com/q191201771/lal/pkg/h2645"
+	"github.com/ysjhlnu/lal/pkg/h2645"
 	"math/rand"
 	"time"
 
-	"github.com/q191201771/lal/pkg/aac"
-	"github.com/q191201771/lal/pkg/avc"
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/hevc"
-	"github.com/q191201771/lal/pkg/rtprtcp"
-	"github.com/q191201771/lal/pkg/sdp"
+	"github.com/ysjhlnu/lal/pkg/aac"
+	"github.com/ysjhlnu/lal/pkg/avc"
+	"github.com/ysjhlnu/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/hevc"
+	"github.com/ysjhlnu/lal/pkg/rtprtcp"
+	"github.com/ysjhlnu/lal/pkg/sdp"
 )
 
 // TODO(chef): refactor 将analyze部分独立出来作为一个filter

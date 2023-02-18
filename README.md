@@ -1,9 +1,9 @@
 # LAL
 
-[![Platform](https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-green.svg)](https://github.com/q191201771/lal)
-[![Release](https://img.shields.io/github/tag/q191201771/lal.svg?label=release)](https://github.com/q191201771/lal/releases)
-[![CI](https://github.com/q191201771/lal/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/q191201771/lal/actions/workflows/ci.yml)
-[![goreportcard](https://goreportcard.com/badge/github.com/q191201771/lal)](https://goreportcard.com/report/github.com/q191201771/lal)
+[![Platform](https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-green.svg)](https://github.com/ysjhlnu/lal)
+[![Release](https://img.shields.io/github/tag/q191201771/lal.svg?label=release)](https://github.com/ysjhlnu/lal/releases)
+[![CI](https://github.com/ysjhlnu/lal/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ysjhlnu/lal/actions/workflows/ci.yml)
+[![goreportcard](https://goreportcard.com/badge/github.com/ysjhlnu/lal)](https://goreportcard.com/report/github.com/ysjhlnu/lal)
 ![wechat](https://img.shields.io/:微信-q191201771-blue.svg)
 ![qqgroup](https://img.shields.io/:QQ群-635846365-blue.svg)
 
@@ -22,7 +22,7 @@ First, make sure that Go version >= 1.14
 For Linux/macOS user:
 
 ```shell
-$git clone https://github.com/q191201771/lal.git
+$git clone https://github.com/ysjhlnu/lal.git
 $cd lal
 $make build
 ```
@@ -32,18 +32,18 @@ Then all binaries go into the `./bin/` directory. That's it.
 For an experienced gopher(and Windows user), the only thing you should be concern is that `the main function` is under the `./app/lalserver` directory. So you can also:
 
 ```shell
-$git clone https://github.com/q191201771/lal.git
+$git clone https://github.com/ysjhlnu/lal.git
 $cd lal/app/lalserver
 $go build
 ```
 
 Or using whatever IDEs you'd like.
 
-So far, the only direct and indirect **dependency** of lal is [naza(A basic Go utility library)](https://github.com/q191201771/lal.git) which is also written by myself. This leads to less dependency or version manager issues.
+So far, the only direct and indirect **dependency** of lal is [naza(A basic Go utility library)](https://github.com/ysjhlnu/lal.git) which is also written by myself. This leads to less dependency or version manager issues.
 
 ### 2. Prebuilt binaries
 
-Prebuilt binaries for Linux, macOS(Darwin), Windows are available in the [lal github releases page](https://github.com/q191201771/lal/releases). Naturally, using [the latest release binary](https://github.com/q191201771/lal/releases/latest) is the recommended way. The naming format is `lal_<version>_<platform>.zip`, e.g. `lal_v0.20.0_linux.zip`
+Prebuilt binaries for Linux, macOS(Darwin), Windows are available in the [lal github releases page](https://github.com/ysjhlnu/lal/releases). Naturally, using [the latest release binary](https://github.com/ysjhlnu/lal/releases/latest) is the recommended way. The naming format is `lal_<version>_<platform>.zip`, e.g. `lal_v0.20.0_linux.zip`
 
 LAL could also be built from the source wherever the Go compiler toolchain can run, e.g. for other architectures including arm32 and mipsle which have been tested by the community.
 
@@ -58,7 +58,7 @@ $docker run -it -p 1935:1935 -p 8080:8080 -p 4433:4433 -p 5544:5544 -p 8083:8083
 option 2, build from local source with Dockerfile, and run:
 
 ```
-$git clone https://github.com/q191201771/lal.git
+$git clone https://github.com/ysjhlnu/lal.git
 $cd lal
 $docker build -t lal .
 $docker run -it -p 1935:1935 -p 8080:8080 -p 4433:4433 -p 5544:5544 -p 8083:8083 -p 8084:8084 -p 30000-30100:30000-30100/udp lal /lal/bin/lalserver -c /lal/conf/lalserver.conf.json
@@ -103,10 +103,10 @@ Our goals are not only a production server but also a simple package with a well
 
 ## Contact
 
-Bugs, questions, suggestions, anything related or not, feel free to contact me with [lal github issues](https://github.com/q191201771/lal/issues).
+Bugs, questions, suggestions, anything related or not, feel free to contact me with [lal github issues](https://github.com/ysjhlnu/lal/issues).
 
 ## License
 
-MIT, see [License](https://github.com/q191201771/lal/blob/master/LICENSE).
+MIT, see [License](https://github.com/ysjhlnu/lal/blob/master/LICENSE).
 
 this note updated by yoko, 202209

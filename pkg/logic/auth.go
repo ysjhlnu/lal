@@ -1,5 +1,5 @@
 // Copyright 2022, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -9,7 +9,7 @@
 package logic
 
 import (
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 )
 
 // TODO(chef): [refactor] 将simple_auth.go的内容合并过来，没必要弄两个文件 202209

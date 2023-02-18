@@ -28,7 +28,7 @@ LDFlags=" \
     -X 'github.com/q191201771/naza/pkg/bininfo.BuildGoVersion=${BuildGoVersion}' \
 "
 
-#-X 'github.com/q191201771/lal/pkg/logic.webUITpl=${WebUITpl}' \
+#-X 'github.com/ysjhlnu/lal/pkg/logic.webUITpl=${WebUITpl}' \
 
 echo "build" ${ROOT_DIR}/app/lalserver "..."
 cd ${ROOT_DIR}/app/lalserver && go build -ldflags "$LDFlags" -o ${ROOT_DIR}/${OUT_DIR}/lalserver
