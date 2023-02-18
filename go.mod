@@ -1,4 +1,4 @@
-module github.com/q191201771/lal
+module github.com/ysjhlnu/lal
 
 go 1.16
 
