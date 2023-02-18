@@ -261,7 +261,7 @@ func (s *ClientSession) doContext(ctx context.Context) error {
 }
 
 func (s *ClientSession) parseUrl(rawUrl string) (err error) {
-	s.urlCtx, err = base.ParseRtmpUrl(rawUrl)
+	s.urlCtx, err = base.ParseRtmpUrl2(rawUrl)
 	if err != nil {
 		return err
 	}

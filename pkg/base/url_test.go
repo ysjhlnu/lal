@@ -282,16 +282,27 @@ func testParseRtmpUrlCase2(t *testing.T) {
 
 	url := "rtmp://xxx.com:1935/vyun?vhost=thirdVhost?token=88F4/lss_7"
 	//url := "rtmp://rs.live.vhou.net/vhall?vhost=thirdVhost?token=2A317D14t25690"
-	ctx, err := base.ParseRtmpUrl(url)
+	ctx, err := base.ParseRtmpUrl2(url)
+	fmt.Printf("%#v\n", ctx)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "vyun?vhost=thirdVhost?token=88F4", appNameFn(ctx))
 	assert.Equal(t, "rtmp://xxx.com:1935/vyun?vhost=thirdVhost?token=88F4", tcUrlFn(ctx))
 	assert.Equal(t, "lss_7", streamNameWithRawQueryFn(ctx))
 
 	url = "rtmp://xxx.net/vhall?vhost=thirdVhost?token=2A317D14t25690/138521921"
-	ctx, err = base.ParseRtmpUrl(url)
+	ctx, err = base.ParseRtmpUrl2(url)
+	fmt.Printf("%#v\n", ctx)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "vhall?vhost=thirdVhost?token=2A317D14t25690", appNameFn(ctx))
 	assert.Equal(t, "rtmp://xxx.net/vhall?vhost=thirdVhost?token=2A317D14t25690", tcUrlFn(ctx))
 	assert.Equal(t, "138521921", streamNameWithRawQueryFn(ctx))
+
+	url = "rtmp://2.18.1.139:1950/live?rr=1234356/100000706_1_ff8080817fc0de7b01803ba937bf0000"
+	ctx, err = base.ParseRtmpUrl2(url)
+	fmt.Printf("%#v\n", ctx)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "live?rr=1234356", appNameFn(ctx))
+	assert.Equal(t, "rtmp://2.18.1.139:1950/live?rr=1234356", tcUrlFn(ctx))
+	assert.Equal(t, "100000706_1_ff8080817fc0de7b01803ba937bf0000", streamNameWithRawQueryFn(ctx))
+
 }
