@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/ysjhlnu/lal
+// https://github.com/q191201771/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -8,7 +8,11 @@
 
 package rtmp
 
-import "github.com/ysjhlnu/lal/pkg/base"
+
+import (
+	"crypto/tls"
+	"github.com/ysjhlnu/lal/pkg/base"
+)
 
 type PushSession struct {
 	IsFresh bool
@@ -21,10 +25,17 @@ type PushSessionOption struct {
 	// 如果为0，则没有超时时间
 	PushTimeoutMs int
 
-	WriteAvTimeoutMs     int
-	WriteBufSize         int // io层发送音视频数据的缓冲大小，如果为0，则没有缓冲
-	WriteChanSize        int // io层发送音视频数据的异步队列大小，如果为0，则同步发送
+	WriteAvTimeoutMs int
+	WriteBufSize     int // io层发送音视频数据的缓冲大小，如果为0，则没有缓冲
+	WriteChanSize    int // io层发送音视频数据的异步队列大小，如果为0，则同步发送
+
 	HandshakeComplexFlag bool
+	// TlsConfig
+	// rtmps时使用。
+	// 不关心可以不填。
+	// 业务方可以通过这个字段自定义 tls.Config
+	// 注意，如果使用rtmps并且该字段为nil，那么内部会使用 base.DefaultTlsConfigClient 生成 tls.Config
+	TlsConfig *tls.Config
 }
 
 var defaultPushSessionOption = PushSessionOption{

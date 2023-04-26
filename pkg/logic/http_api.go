@@ -12,7 +12,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"strings"
@@ -131,7 +131,7 @@ func (h *HttpApiServer) ctrlStartRelayPullHandler(w http.ResponseWriter, req *ht
 	}
 
 	if !j.Exist("pull_timeout_ms") {
-		info.PullTimeoutMs = 5000
+		info.PullTimeoutMs = DefaultApiCtrlStartRelayPullReqPullTimeoutMs
 	}
 	if !j.Exist("pull_retry_num") {
 		info.PullRetryNum = base.PullRetryNumNever
@@ -200,7 +200,7 @@ func (h *HttpApiServer) ctrlStartRtpPubHandler(w http.ResponseWriter, req *http.
 	}
 
 	if !j.Exist("timeout_ms") {
-		info.TimeoutMs = 60000
+		info.TimeoutMs = DefaultApiCtrlStartRtpPubReqTimeoutMs
 	}
 	// 不存在时默认0值的，不需要手动写了
 	//if !j.Exist("port") {
@@ -253,6 +253,7 @@ func (h *HttpApiServer) notFoundHandler(w http.ResponseWriter, req *http.Request
 func feedback(v interface{}, w http.ResponseWriter) {
 	resp, _ := json.Marshal(v)
 	w.Header().Add("Server", base.LalHttpApiServer)
+	base.AddCorsHeaders(w)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(resp)
 }
@@ -261,7 +262,7 @@ func feedback(v interface{}, w http.ResponseWriter) {
 //
 // TODO(chef): [refactor] 搬到naza中 202205
 func unmarshalRequestJsonBody(r *http.Request, info interface{}, keyFieldList ...string) (nazajson.Json, error) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nazajson.Json{}, err
 	}

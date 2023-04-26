@@ -345,7 +345,8 @@ a=appversion:1.0`
 	assert.Equal(t, nil, err)
 	assert.Equal(t, 8000, ctx.AudioClockRate)
 	assert.Equal(t, 90000, ctx.VideoClockRate)
-	assert.Equal(t, base.AvPacketPtUnknown, ctx.audioPayloadTypeBase)
+	//assert.Equal(t, base.AvPacketPtUnknown, ctx.audioPayloadTypeBase)
+	assert.Equal(t, base.AvPacketPtG711A, ctx.audioPayloadTypeBase)
 	assert.Equal(t, base.AvPacketPtHevc, ctx.videoPayloadTypeBase)
 	assert.Equal(t, 8, ctx.audioPayloadTypeOrigin)
 	assert.Equal(t, 96, ctx.videoPayloadTypeOrigin)
@@ -700,5 +701,5 @@ a=control:streamid=1
 	ctx, err := ParseSdp2LogicContext([]byte(golden))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, ctx.IsAudioPayloadTypeOrigin(8))
-	assert.Equal(t, false, ctx.IsAudioUnpackable())
+	assert.Equal(t, true, ctx.IsAudioUnpackable())
 }

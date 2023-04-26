@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/ysjhlnu/lal
+// https://github.com/q191201771/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -10,6 +10,7 @@ package rtmp
 
 import (
 	"github.com/ysjhlnu/lal/pkg/base"
+	"crypto/tls"
 )
 
 type OnReadRtmpAvMsg func(msg base.RtmpMsg)
@@ -27,10 +28,17 @@ type PullSessionOption struct {
 	PullTimeoutMs int
 
 	ReadAvTimeoutMs            int
-	ReadBufSize                int // io层读取音视频数据时的缓冲大小，如果为0，则没有缓冲
-	HandshakeComplexFlag       bool
-	PeerWinAckSize             int
+	ReadBufSize                int  // io层读取音视频数据时的缓冲大小，如果为0，则没有缓冲
 	ReuseReadMessageBufferFlag bool // 接收Message时，是否复用内存块
+	PeerWinAckSize             int
+
+	HandshakeComplexFlag bool
+	// TlsConfig
+	// rtmps时使用。
+	// 不关心可以不填。
+	// 业务方可以通过这个字段自定义 tls.Config
+	// 注意，如果使用rtmps并且该字段为nil，那么内部会使用 base.DefaultTlsConfigClient 生成 tls.Config
+	TlsConfig *tls.Config
 }
 
 var defaultPullSessionOption = PullSessionOption{
