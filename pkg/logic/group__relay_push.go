@@ -1,5 +1,5 @@
 // Copyright 2022, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,7 +11,7 @@ package logic
 import (
 	"fmt"
 
-	"github.com/q191201771/lal/pkg/rtmp"
+	"github.com/ysjhlnu/lal/pkg/rtmp"
 )
 
 // TODO(chef): [refactor] 参照relay pull，整体重构一次relay push 202205
@@ -97,8 +97,8 @@ func (group *Group) startPushIfNeeded() {
 
 		go func(u, u2 string) {
 			pushSession := rtmp.NewPushSession(func(option *rtmp.PushSessionOption) {
-				option.PushTimeoutMs = relayPushTimeoutMs
-				option.WriteAvTimeoutMs = relayPushWriteAvTimeoutMs
+				option.PushTimeoutMs = RelayPushTimeoutMs
+				option.WriteAvTimeoutMs = RelayPushWriteAvTimeoutMs
 			})
 			err := pushSession.Push(u2)
 			if err != nil {

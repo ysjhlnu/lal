@@ -1,5 +1,5 @@
 // Copyright 2022, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -9,8 +9,8 @@
 package logic
 
 import (
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/remux"
+	"github.com/ysjhlnu/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/remux"
 	"github.com/q191201771/naza/pkg/nazaatomic"
 	"github.com/q191201771/naza/pkg/nazalog"
 )
@@ -84,7 +84,9 @@ func (ctx *CustomizePubSessionContext) FeedAudioSpecificConfig(asc []byte) error
 		return base.ErrDisposedInStream
 	}
 	//nazalog.Debugf("[%s] FeedAudioSpecificConfig. asc=%s", ctx.uniqueKey, hex.Dump(asc))
-	ctx.dumpFile.WriteWithType(asc, base.DumpTypeCustomizePubAudioSpecificConfigData)
+	if ctx.dumpFile != nil {
+		_ = ctx.dumpFile.WriteWithType(asc, base.DumpTypeCustomizePubAudioSpecificConfigData)
+	}
 	ctx.remuxer.InitWithAvConfig(asc, nil, nil, nil)
 	return nil
 }
@@ -95,7 +97,9 @@ func (ctx *CustomizePubSessionContext) FeedAvPacket(packet base.AvPacket) error 
 		return base.ErrDisposedInStream
 	}
 	//nazalog.Debugf("[%s] FeedAvPacket. packet=%s", ctx.uniqueKey, packet.DebugString())
-	ctx.dumpFile.WriteAvPacket(packet, base.DumpTypeCustomizePubData)
+	if ctx.dumpFile != nil {
+		_ = ctx.dumpFile.WriteAvPacket(packet, base.DumpTypeCustomizePubData)
+	}
 	ctx.remuxer.FeedAvPacket(packet)
 	return nil
 }

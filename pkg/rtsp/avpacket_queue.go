@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -9,8 +9,8 @@
 package rtsp
 
 import (
-	"github.com/q191201771/lal/pkg/base"
 	"github.com/q191201771/naza/pkg/circularqueue"
+	"github.com/ysjhlnu/lal/pkg/base"
 )
 
 // 处理音频和视频的时间戳：
@@ -65,6 +65,8 @@ func (a *AvPacketQueue) Feed(pkt base.AvPacket) {
 
 		_ = a.videoQueue.PushBack(pkt)
 	case base.AvPacketPtG711A:
+		fallthrough
+	case base.AvPacketPtG711U:
 		fallthrough
 	case base.AvPacketPtAac:
 		if pkt.Timestamp < a.audioBaseTs {

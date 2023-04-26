@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,10 +11,9 @@ package rtmp
 import (
 	"encoding/hex"
 	"fmt"
-
 	"github.com/q191201771/naza/pkg/nazabytes"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 )
 
 // ----- Stream --------------------------------------------------------------------------------------------------------
@@ -23,6 +22,7 @@ type Stream struct {
 	header base.RtmpHeader
 	msg    StreamMsg
 
+	absTsFlag bool   // 标记当这个stream收到新的msg的时候，是否收到过绝对时间
 	timestamp uint32 // 注意，是rtmp chunk协议header中的时间戳，可能是绝对的，也可能是相对的。上层不应该使用这个字段，而应该使用Header.TimestampAbs
 }
 

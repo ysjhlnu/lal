@@ -1,5 +1,5 @@
 // Copyright 2022, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,25 +11,48 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 
-	"github.com/q191201771/lal/pkg/aac"
-	"github.com/q191201771/lal/pkg/avc"
-	"github.com/q191201771/lal/pkg/httpflv"
-	"github.com/q191201771/lal/pkg/remux"
 	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/ysjhlnu/lal/pkg/aac"
+	"github.com/ysjhlnu/lal/pkg/avc"
+	"github.com/ysjhlnu/lal/pkg/httpflv"
+	"github.com/ysjhlnu/lal/pkg/remux"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 
-	"github.com/q191201771/lal/pkg/logic"
 	"github.com/q191201771/naza/pkg/bininfo"
+	"github.com/ysjhlnu/lal/pkg/logic"
+)
+
+// 注意，使用这个demo时，请确保这三个文件存在，文件下载地址 https://github.com/q191201771/lalext/tree/master/avfile
+const (
+	h264filename = "/tmp/test.h264"
+	aacfilename  = "/tmp/test.aac"
+	flvfilename  = "/tmp/test.flv"
 )
 
 // 文档见 <lalserver二次开发 - pub接入自定义流>
 // https://pengrl.com/lal/#/customize_pub
 //
+
+// MySession 演示业务方实现 logic.ICustomizeHookSessionContext 接口，从而hook所有输入到lalserver中的流以及流中的数据。
+type MySession struct {
+	uniqueKey  string
+	streamName string
+}
+
+func (i *MySession) OnMsg(msg base.RtmpMsg) {
+	// 业务方可以在这里对流做处理
+	if msg.IsAacSeqHeader() || msg.IsVideoKeySeqHeader() || msg.IsVideoKeyNalu() {
+		nazalog.Debugf("%s", msg.DebugString())
+	}
+}
+
+func (i *MySession) OnStop() {
+	nazalog.Debugf("OnStop")
+}
 
 func main() {
 	defer nazalog.Sync()
@@ -39,7 +62,16 @@ func main() {
 		option.ConfFilename = confFilename
 	})
 
-	// 比常规lalserver多加了这一行
+	// 在常规lalserver基础上增加这行，用于演示hook lalserver中的流
+	lals.WithOnHookSession(func(uniqueKey string, streamName string) logic.ICustomizeHookSessionContext {
+		// 有新的流了，创建业务层的对象，用于hook这个流
+		return &MySession{
+			uniqueKey:  uniqueKey,
+			streamName: streamName,
+		}
+	})
+
+	// 在常规lalserver基础上增加这两个例子，用于演示向lalserver输入自定义流
 	go showHowToCustomizePub(lals)
 	go showHowToFlvCustomizePub(lals)
 
@@ -62,10 +94,7 @@ func parseFlag() string {
 }
 
 func showHowToFlvCustomizePub(lals logic.ILalServer) {
-	const (
-		flvfilename            = "/tmp/test.flv"
-		customizePubStreamName = "f110"
-	)
+	const customizePubStreamName = "f110"
 
 	time.Sleep(200 * time.Millisecond)
 
@@ -91,12 +120,7 @@ func showHowToFlvCustomizePub(lals logic.ILalServer) {
 }
 
 func showHowToCustomizePub(lals logic.ILalServer) {
-	const (
-		h264filename = "/tmp/test.h264"
-		aacfilename  = "/tmp/test.aac"
-
-		customizePubStreamName = "c110"
-	)
+	const customizePubStreamName = "c110"
 
 	time.Sleep(200 * time.Millisecond)
 
@@ -139,7 +163,7 @@ func showHowToCustomizePub(lals logic.ILalServer) {
 // readAudioPacketsFromFile 从aac es流文件读取所有音频包
 func readAudioPacketsFromFile(filename string) (audioContent []byte, audioPackets []base.AvPacket) {
 	var err error
-	audioContent, err = ioutil.ReadFile(filename)
+	audioContent, err = os.ReadFile(filename)
 	nazalog.Assert(nil, err)
 
 	pos := 0
@@ -170,7 +194,7 @@ func readAudioPacketsFromFile(filename string) (audioContent []byte, audioPacket
 // readVideoPacketsFromFile 从h264 es流文件读取所有视频包
 func readVideoPacketsFromFile(filename string) (videoContent []byte, videoPackets []base.AvPacket) {
 	var err error
-	videoContent, err = ioutil.ReadFile(filename)
+	videoContent, err = os.ReadFile(filename)
 	nazalog.Assert(nil, err)
 
 	timestamp := float32(0)

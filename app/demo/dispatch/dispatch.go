@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -10,16 +10,16 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"strings"
 
-	"github.com/q191201771/lal/app/demo/dispatch/datamanager"
-	"github.com/q191201771/lal/pkg/base"
 	"github.com/q191201771/naza/pkg/nazahttp"
 	"github.com/q191201771/naza/pkg/nazalog"
 	"github.com/q191201771/naza/pkg/unique"
+	"github.com/ysjhlnu/lal/app/demo/dispatch/datamanager"
+	"github.com/ysjhlnu/lal/pkg/base"
 )
 
 //
@@ -195,7 +195,7 @@ func OnUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func logHandler(w http.ResponseWriter, r *http.Request) {
-	b, _ := ioutil.ReadAll(r.Body)
+	b, _ := io.ReadAll(r.Body)
 	nazalog.Infof("r=%+v, body=%s", r, b)
 }
 

@@ -1,4 +1,34 @@
-#### v0.33.0 (2022-01)
+#### v0.35.4 (2023-04)
+
+- [feat] rtmp: 推流支持enhanced RTMP
+- [feat] rtsp2rtmp支持G711
+- [opt] rtsp: client端使用UDP收到461则切换成TCP（反之也然）
+- [opt] mpegts根据编码格式打包patpmt（提高纯视频流的兼容性）
+- [opt] HTTP-API: 支持跨域
+- [fix] rtmp: 解析amf strict array
+- [fix] rtmp转mpegts处理时间戳错误，导致有b帧时ffplay播放hls报错
+- [fix] GetSamplingFrequency missing 24000
+- [fix] simplifing logic to enable fragment_duration_ms on configuration to be under thousands (but not below hundreds)
+- [fix] 解决CustomizePubSessionContext使用dumpFile空指针导致崩溃的问题
+- [test] unit test for base.DumpFile
+- [chore] 在编译脚本和测试脚本中显示指定开启go mod
+
+#### v0.34.3 (2023-03)
+
+- [feat] rtmp2rtsp: 支持 G711A/G711U
+- [opt] rtsp: 兼容G711 SDP，支持RTSP G711间的转发
+- [feat] 增加Web页面（基于HTTP-API）
+- [fix] rtmp: 修复微信小程序推流卡的问题（绝对时间戳字段应该从属于stream维度而非connection）
+- [feat] rtmp: server session支持发送ack
+- [opt] rtmp: client session 只使用PeerWinAckSize的值作为是否发送ack的触发条件
+- [refactor] using Go embed to load lal.html
+- [refactor] remove deprecated io/ioutil packages
+- [opt] rtmp: ClientSession支持定制化tls.Config
+- [fix] 修复解析配置文件中sub_session_hash_key字段写错的bug
+- [log] add log when not caching frame by SingleGopMaxFrameNum
+- [chore] 增加检查版本的脚本check_versions.sh
+
+#### v0.33.0 (2023-01)
 
 - [feat] debug dump，支持抓取流数据回放调试
 - [feat] http api & notify: 支持获取hls播放者数量、码率等信息；支持获取hls开始播放、结束播放的事件通知
@@ -235,7 +265,7 @@
 - [fix] rtsp推流时，rtp包时间戳翻转导致的错误（比如长时间推流后hls一直强制切片）
 - [fix] lalserver的group中，rtsp sub超时时，锁重入导致服务器异常阻塞不响应
 - [fix] 修复mipsle架构下rtsp崩溃
-- [fix] 修复lalserver中（rtsp.BaseInSession以及logic.Group）的一些竞态读写，https://github.com/q191201771/lal/issues/47
+- [fix] 修复lalserver中（rtsp.BaseInSession以及logic.Group）的一些竞态读写，https://github.com/ysjhlnu/lal/issues/47
 - [fix] demo: 两个拉httpflv流的demo，main函数退出前忘记等待拉流结束
 - [refactor] package rtprtcp: 重构一些函数名
 - [refactor] package rtprtcp: 重构rtp unpacker，业务方可以使用默认的container，protocol策略，也可以自己实现特定的协议解析组包策略

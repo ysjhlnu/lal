@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -41,6 +41,8 @@ const (
 
 	Msid1 = 1 // publish、play、onStatus 以及 音视频数据
 )
+
+const ackSeqMax = 0xf0000000
 
 // ---------------------------------------------------------------------------------------------------------------------
 // ### rtmp connect message

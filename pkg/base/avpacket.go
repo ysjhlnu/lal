@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -21,6 +21,7 @@ type AvPacketPt int
 
 const (
 	AvPacketPtUnknown AvPacketPt = -1
+	AvPacketPtG711U   AvPacketPt = 0  // g711u
 	AvPacketPtG711A   AvPacketPt = 8  // g711a
 	AvPacketPtAvc     AvPacketPt = 96 // h264
 	AvPacketPtHevc    AvPacketPt = 98 // h265

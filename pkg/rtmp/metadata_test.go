@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -13,9 +13,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 
-	"github.com/q191201771/lal/pkg/rtmp"
+	"github.com/ysjhlnu/lal/pkg/rtmp"
 	"github.com/q191201771/naza/pkg/assert"
 )
 
@@ -53,7 +53,8 @@ func TestMetadata(t *testing.T) {
 	w, err := rtmp.MetadataEnsureWithSdf(b)
 	assert.Equal(t, nil, err)
 	exp2 := "02000d40736574446174614672616d6502000a6f6e4d6574614461746103000577696474680040900000000000000006686569676874004088000000000000000c617564696f636f6465636964004024000000000000000c766964656f636f646563696400401c000000000000000776657273696f6e0200096c616c302e33322e3000036c616c020006302e33322e30000009"
-	strings.Replace(exp2, "302e33322e3", ver, -1)
+	// 注意，替换版本为当前版本
+	exp2 = strings.Replace(exp2, "302e33322e30", ver, -1)
 	assert.Equal(t, exp2, hex.EncodeToString(w))
 
 	wo, err = rtmp.MetadataEnsureWithoutSdf(b)

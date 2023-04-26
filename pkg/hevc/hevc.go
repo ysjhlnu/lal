@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -13,7 +13,7 @@ import (
 
 	"github.com/q191201771/naza/pkg/nazaerrors"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 
 	"github.com/q191201771/naza/pkg/nazabits"
 
@@ -169,6 +169,21 @@ func VpsSpsPpsSeqHeader2Annexb(payload []byte) ([]byte, error) {
 	return ret, nil
 }
 
+func VpsSpsPpsEnhancedSeqHeader2Annexb(payload []byte) ([]byte, error) {
+	vps, sps, pps, err := ParseVpsSpsPpsFromEnhancedSeqHeader(payload)
+	if err != nil {
+		return nil, err
+	}
+	var ret []byte
+	ret = append(ret, NaluStartCode4...)
+	ret = append(ret, vps...)
+	ret = append(ret, NaluStartCode4...)
+	ret = append(ret, sps...)
+	ret = append(ret, NaluStartCode4...)
+	ret = append(ret, pps...)
+	return ret, nil
+}
+
 func BuildVpsSpsPps2Annexb(vps, sps, pps []byte) ([]byte, error) {
 	ctx := newContext()
 	if err := ParseVps(vps, ctx); err != nil {
@@ -203,6 +218,16 @@ func ParseVpsSpsPpsFromSeqHeader(payload []byte) (vps, sps, pps []byte, err erro
 	return
 }
 
+func ParseVpsSpsPpsFromEnhancedSeqHeader(payload []byte) (vps, sps, pps []byte, err error) {
+	packetType := payload[0] & 0x0f
+
+	if packetType == 0 {
+		return parseVpsSpsPpsFromRecord(payload)
+	}
+
+	return nil, nil, nil, nazaerrors.Wrap(base.ErrHevc)
+}
+
 // ParseVpsSpsPpsFromSeqHeaderWithoutMalloc
 //
 // 从HVCC格式的Seq Header中得到VPS，SPS，PPS内存块。
@@ -226,6 +251,10 @@ func ParseVpsSpsPpsFromSeqHeaderWithoutMalloc(payload []byte) (vps, sps, pps []b
 		return nil, nil, nil, nazaerrors.Wrap(base.ErrHevc)
 	}
 
+	return parseVpsSpsPpsFromRecord(payload)
+}
+
+func parseVpsSpsPpsFromRecord(payload []byte) (vps, sps, pps []byte, err error) {
 	index := 27
 	if numOfArrays := payload[index]; numOfArrays != 3 && numOfArrays != 4 {
 		return nil, nil, nil, nazaerrors.Wrap(base.ErrHevc)

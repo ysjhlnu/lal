@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,7 +11,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/q191201771/lal/pkg/remux"
+	"github.com/ysjhlnu/lal/pkg/remux"
 	"os"
 	"strconv"
 	"strings"
@@ -19,11 +19,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/q191201771/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/base"
 
-	"github.com/q191201771/lal/pkg/httpflv"
-	"github.com/q191201771/lal/pkg/rtmp"
 	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/ysjhlnu/lal/pkg/httpflv"
+	"github.com/ysjhlnu/lal/pkg/rtmp"
 )
 
 // RTMP拉流客户端，从远端服务器拉取RTMP流，存储为本地FLV文件

@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -39,8 +39,10 @@ var (
 	//
 	LocalChunkSize = 4096
 
+	// 发送 base.RtmpTypeIdWinAckSize 信令中的阈值，目前 ServerSession 在使用
 	windowAcknowledgementSize = 5000000
-	peerBandwidth             = 5000000
+
+	peerBandwidth = 5000000
 )
 
 // 接收rtmp数据时，msg的初始内存块大小

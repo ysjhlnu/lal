@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -150,8 +150,7 @@ func UpdateWebSocketHeader(secWebSocketKey string) []byte {
 		"Keep-Alive: timeout=15, max=100\r\n" +
 		"Connection: Upgrade\r\n" +
 		"Upgrade: websocket\r\n" +
-		"Access-Control-Allow-Credentials: true\r\n" +
-		"Access-Control-Allow-Origin: *\r\n" +
+		CorsHeaders +
 		"\r\n"
 	return []byte(webSocketResponseHeaderStr)
 }

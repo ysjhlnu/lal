@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -18,12 +18,12 @@ import (
 	"github.com/q191201771/naza/pkg/nazaerrors"
 	"github.com/q191201771/naza/pkg/unique"
 
-	"github.com/q191201771/lal/pkg/sdp"
+	"github.com/ysjhlnu/lal/pkg/sdp"
 
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/rtprtcp"
-	"github.com/q191201771/lal/pkg/rtsp"
 	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/ysjhlnu/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/rtprtcp"
+	"github.com/ysjhlnu/lal/pkg/rtsp"
 )
 
 type RtspTunnel struct {
@@ -62,7 +62,7 @@ func NewRtspTunnel(pullUrl string, pushUrl string, pullOverTcp bool, pushOverTcp
 // @return: 如果为nil，表示任务启动成功，此时数据已经在后台转发
 func (r *RtspTunnel) Start() error {
 	r.pullSession = rtsp.NewPullSession(r, func(option *rtsp.PullSessionOption) {
-		option.PullTimeoutMs = 5000
+		option.PullTimeoutMs = 10000
 		option.OverTcp = r.pullOverTcp
 	})
 	if err := r.pullSession.Pull(r.pullUrl); err != nil {
@@ -73,7 +73,7 @@ func (r *RtspTunnel) Start() error {
 	nazalog.Debugf("[%s] start pull succ. sdp=%s", r.uniqueKey, string(sdpCtx.RawSdp))
 
 	r.pushSession = rtsp.NewPushSession(func(option *rtsp.PushSessionOption) {
-		option.PushTimeoutMs = 5000
+		option.PushTimeoutMs = 10000
 		option.OverTcp = r.pushOverTcp
 	})
 	if err := r.pushSession.Push(r.pushUrl, sdpCtx); err != nil {

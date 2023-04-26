@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -11,7 +11,7 @@ package logic
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"github.com/q191201771/naza/pkg/taskpool"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -19,14 +19,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/hls"
-	"github.com/q191201771/lal/pkg/httpflv"
-	"github.com/q191201771/lal/pkg/httpts"
-	"github.com/q191201771/lal/pkg/rtmp"
-	"github.com/q191201771/lal/pkg/rtsp"
 	"github.com/q191201771/naza/pkg/defertaskthread"
 	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/ysjhlnu/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/hls"
+	"github.com/ysjhlnu/lal/pkg/httpflv"
+	"github.com/ysjhlnu/lal/pkg/httpts"
+	"github.com/ysjhlnu/lal/pkg/rtmp"
+	"github.com/ysjhlnu/lal/pkg/rtsp"
 	//"github.com/felixge/fgprof"
 )
 
@@ -49,6 +49,10 @@ type ServerManager struct {
 
 	mutex        sync.Mutex
 	groupManager IGroupManager
+
+	onHookSession func(uniqueKey string, streamName string) ICustomizeHookSessionContext
+
+	notifyHandlerThread taskpool.Pool
 }
 
 func NewServerManager(modOption ...ModOption) *ServerManager {
@@ -87,7 +91,7 @@ Doc: %s
 			}
 		}
 		var err error
-		rawContent, err = ioutil.ReadFile(confFile)
+		rawContent, err = os.ReadFile(confFile)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "read conf file failed. file=%s err=%+v", confFile, err)
 			base.OsExitAndWaitPressIfWindows(1)
@@ -113,9 +117,7 @@ Doc: %s
 		}
 	}
 
-	if sm.option.NotifyHandler == nil {
-		sm.option.NotifyHandler = NewHttpNotify(sm.config.HttpNotifyConfig, sm.config.ServerId)
-	}
+	sm.nhInitNotifyHandler()
 
 	if sm.config.HttpflvConfig.Enable || sm.config.HttpflvConfig.EnableHttps ||
 		sm.config.HttptsConfig.Enable || sm.config.HttptsConfig.EnableHttps ||
@@ -157,7 +159,7 @@ Doc: %s
 func (sm *ServerManager) RunLoop() error {
 	// TODO(chef): 作为阻塞函数，外部只能获取失败或结束的信息，没法获取到启动成功的信息
 
-	sm.option.NotifyHandler.OnServerStart(sm.StatLalInfo())
+	sm.nhOnServerStart(sm.StatLalInfo())
 
 	if sm.pprofServer != nil {
 		go func() {
@@ -280,7 +282,7 @@ func (sm *ServerManager) RunLoop() error {
 	uis := uint32(sm.config.HttpNotifyConfig.UpdateIntervalSec)
 	var updateInfo base.UpdateInfo
 	updateInfo.Groups = sm.StatAllGroup()
-	sm.option.NotifyHandler.OnUpdate(updateInfo)
+	sm.nhOnUpdate(updateInfo)
 
 	t := time.NewTicker(1 * time.Second)
 	defer t.Stop()
@@ -328,7 +330,7 @@ func (sm *ServerManager) RunLoop() error {
 			// 定时通过http notify发送group相关的信息
 			if uis != 0 && (tickCount%uis) == 0 {
 				updateInfo.Groups = sm.StatAllGroup()
-				sm.option.NotifyHandler.OnUpdate(updateInfo)
+				sm.nhOnUpdate(updateInfo)
 			}
 		}
 	}
@@ -396,6 +398,10 @@ func (sm *ServerManager) DelCustomizePubSession(sessionCtx ICustomizePubSessionC
 	group.DelCustomizePubSession(sessionCtx)
 }
 
+func (sm *ServerManager) WithOnHookSession(onHookSession func(uniqueKey string, streamName string) ICustomizeHookSessionContext) {
+	sm.onHookSession = onHookSession
+}
+
 // ----- implement rtmp.IServerObserver interface -----------------------------------------------------------------------
 
 func (sm *ServerManager) OnRtmpConnect(session *rtmp.ServerSession, opa rtmp.ObjectPairArray) {
@@ -408,7 +414,7 @@ func (sm *ServerManager) OnRtmpConnect(session *rtmp.ServerSession, opa rtmp.Obj
 	info.App, _ = opa.FindString("app")
 	info.FlashVer, _ = opa.FindString("flashVer")
 	info.TcUrl, _ = opa.FindString("tcUrl")
-	sm.option.NotifyHandler.OnRtmpConnect(info)
+	sm.nhOnRtmpConnect(info)
 }
 
 func (sm *ServerManager) OnNewRtmpPubSession(session *rtmp.ServerSession) error {
@@ -430,7 +436,7 @@ func (sm *ServerManager) OnNewRtmpPubSession(session *rtmp.ServerSession) error 
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
 
-	sm.option.NotifyHandler.OnPubStart(info)
+	sm.nhOnPubStart(info)
 	return nil
 }
 
@@ -448,7 +454,7 @@ func (sm *ServerManager) OnDelRtmpPubSession(session *rtmp.ServerSession) {
 	info := base.Session2PubStopInfo(session)
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
-	sm.option.NotifyHandler.OnPubStop(info)
+	sm.nhOnPubStop(info)
 }
 
 func (sm *ServerManager) OnNewRtmpSubSession(session *rtmp.ServerSession) error {
@@ -467,7 +473,7 @@ func (sm *ServerManager) OnNewRtmpSubSession(session *rtmp.ServerSession) error 
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
 
-	sm.option.NotifyHandler.OnSubStart(info)
+	sm.nhOnSubStart(info)
 	return nil
 }
 
@@ -485,7 +491,7 @@ func (sm *ServerManager) OnDelRtmpSubSession(session *rtmp.ServerSession) {
 	info := base.Session2SubStopInfo(session)
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
-	sm.option.NotifyHandler.OnSubStop(info)
+	sm.nhOnSubStop(info)
 }
 
 // ----- implement IHttpServerHandlerObserver interface -----------------------------------------------------------------
@@ -506,7 +512,7 @@ func (sm *ServerManager) OnNewHttpflvSubSession(session *httpflv.SubSession) err
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
 
-	sm.option.NotifyHandler.OnSubStart(info)
+	sm.nhOnSubStart(info)
 	return nil
 }
 
@@ -524,7 +530,7 @@ func (sm *ServerManager) OnDelHttpflvSubSession(session *httpflv.SubSession) {
 	info := base.Session2SubStopInfo(session)
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
-	sm.option.NotifyHandler.OnSubStop(info)
+	sm.nhOnSubStop(info)
 }
 
 func (sm *ServerManager) OnNewHttptsSubSession(session *httpts.SubSession) error {
@@ -543,7 +549,7 @@ func (sm *ServerManager) OnNewHttptsSubSession(session *httpts.SubSession) error
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
 
-	sm.option.NotifyHandler.OnSubStart(info)
+	sm.nhOnSubStart(info)
 
 	return nil
 }
@@ -562,7 +568,7 @@ func (sm *ServerManager) OnDelHttptsSubSession(session *httpts.SubSession) {
 	info := base.Session2SubStopInfo(session)
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
-	sm.option.NotifyHandler.OnSubStop(info)
+	sm.nhOnSubStop(info)
 }
 
 // ----- implement rtsp.IServerObserver interface -----------------------------------------------------------------------
@@ -593,7 +599,7 @@ func (sm *ServerManager) OnNewRtspPubSession(session *rtsp.PubSession) error {
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
 
-	sm.option.NotifyHandler.OnPubStart(info)
+	sm.nhOnPubStart(info)
 	return nil
 }
 
@@ -610,7 +616,7 @@ func (sm *ServerManager) OnDelRtspPubSession(session *rtsp.PubSession) {
 	info := base.Session2PubStopInfo(session)
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
-	sm.option.NotifyHandler.OnPubStop(info)
+	sm.nhOnPubStop(info)
 }
 
 func (sm *ServerManager) OnNewRtspSubSessionDescribe(session *rtsp.SubSession) (ok bool, sdp []byte) {
@@ -632,7 +638,7 @@ func (sm *ServerManager) OnNewRtspSubSessionDescribe(session *rtsp.SubSession) (
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
 
-	sm.option.NotifyHandler.OnSubStart(info)
+	sm.nhOnSubStart(info)
 	return
 }
 
@@ -658,7 +664,7 @@ func (sm *ServerManager) OnDelRtspSubSession(session *rtsp.SubSession) {
 	info := base.Session2SubStopInfo(session)
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
-	sm.option.NotifyHandler.OnSubStop(info)
+	sm.nhOnSubStop(info)
 }
 
 func (sm *ServerManager) OnNewHlsSubSession(session *hls.SubSession) error {
@@ -677,7 +683,7 @@ func (sm *ServerManager) OnNewHlsSubSession(session *hls.SubSession) error {
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
 
-	sm.option.NotifyHandler.OnSubStart(info)
+	sm.nhOnSubStart(info)
 
 	return nil
 }
@@ -696,7 +702,7 @@ func (sm *ServerManager) OnDelHlsSubSession(session *hls.SubSession) {
 	info := base.Session2SubStopInfo(session)
 	info.HasInSession = group.HasInSession()
 	info.HasOutSession = group.HasOutSession()
-	sm.option.NotifyHandler.OnSubStop(info)
+	sm.nhOnSubStop(info)
 }
 
 // ----- implement IGroupCreator interface -----------------------------------------------------------------------------
@@ -710,7 +716,10 @@ func (sm *ServerManager) CreateGroup(appName string, streamName string) *Group {
 	} else {
 		config = sm.config
 	}
-	return NewGroup(appName, streamName, config, sm)
+	option := GroupOption{
+		onHookSession: sm.onHookSession,
+	}
+	return NewGroup(appName, streamName, config, option, sm)
 }
 
 // ----- implement IGroupObserver interface -----------------------------------------------------------------------------
@@ -745,15 +754,15 @@ func (sm *ServerManager) CleanupHlsIfNeeded(appName string, streamName string, p
 }
 
 func (sm *ServerManager) OnRelayPullStart(info base.PullStartInfo) {
-	sm.option.NotifyHandler.OnRelayPullStart(info)
+	sm.nhOnRelayPullStart(info)
 }
 
 func (sm *ServerManager) OnRelayPullStop(info base.PullStopInfo) {
-	sm.option.NotifyHandler.OnRelayPullStop(info)
+	sm.nhOnRelayPullStop(info)
 }
 
 func (sm *ServerManager) OnHlsMakeTs(info base.HlsMakeTsInfo) {
-	sm.option.NotifyHandler.OnHlsMakeTs(info)
+	sm.nhOnHlsMakeTs(info)
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

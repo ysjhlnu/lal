@@ -1,5 +1,5 @@
 // Copyright 2020, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -16,13 +16,13 @@ import "strings"
 // 并且将这些信息打入可执行文件、日志、各协议中的标准版本字段中
 
 // LalVersion 整个lal工程的版本号。注意，该变量由外部脚本修改维护，不要手动在代码中修改
-const LalVersion = "v0.33.0"
+const LalVersion = "v0.35.4"
 
 // ConfVersion lalserver的配置文件的版本号
 const ConfVersion = "v0.4.1"
 
 // HttpApiVersion lalserver的HTTP-API功能的版本号
-const HttpApiVersion = "v0.4.5"
+const HttpApiVersion = "v0.4.6"
 
 // HttpNotifyVersion lalserver的HTTP-Notify功能的版本号
 const HttpNotifyVersion = "v0.2.2"
@@ -31,11 +31,11 @@ const HttpWebUiVersion = "v0.0.2"
 
 var (
 	LalLibraryName = "lal"
-	LalGithubRepo  = "github.com/q191201771/lal"
-	LalGithubSite  = "https://github.com/q191201771/lal"
+	LalGithubRepo  = "github.com/ysjhlnu/lal"
+	LalGithubSite  = "https://github.com/ysjhlnu/lal"
 	LalDocSite     = "https://pengrl.com/lal"
 
-	// LalFullInfo e.g. lal v0.12.3 (github.com/q191201771/lal)
+	// LalFullInfo e.g. lal v0.12.3 (github.com/ysjhlnu/lal)
 	LalFullInfo = LalLibraryName + " " + LalVersion + " (" + LalGithubRepo + ")"
 
 	// LalVersionDot e.g. 0.12.3
@@ -47,7 +47,7 @@ var (
 
 var (
 	// LalRtmpHandshakeWaterMark 植入rtmp握手随机字符串中
-	// e.g. lal v0.12.3 (github.com/q191201771/lal)
+	// e.g. lal v0.12.3 (github.com/ysjhlnu/lal)
 	LalRtmpHandshakeWaterMark string
 
 	// LalRtmpConnectResultVersion 植入rtmp server中的connect result信令中

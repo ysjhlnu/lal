@@ -1,5 +1,5 @@
 // Copyright 2021, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -19,7 +19,7 @@ type mockGroupCreator struct {
 
 func (m *mockGroupCreator) CreateGroup(appName, streamName string) *Group {
 	var config Config
-	return NewGroup(appName, streamName, &config, nil)
+	return NewGroup(appName, streamName, &config, GroupOption{}, nil)
 }
 
 var mgc = &mockGroupCreator{}

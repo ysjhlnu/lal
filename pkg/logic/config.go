@@ -1,5 +1,5 @@
 // Copyright 2019, Chef.  All rights reserved.
-// https://github.com/q191201771/lal
+// https://github.com/ysjhlnu/lal
 //
 // Use of this source code is governed by a MIT-style license
 // that can be found in the License file.
@@ -14,11 +14,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/q191201771/lal/pkg/base"
-	"github.com/q191201771/lal/pkg/hls"
-	"github.com/q191201771/lal/pkg/rtsp"
 	"github.com/q191201771/naza/pkg/nazajson"
 	"github.com/q191201771/naza/pkg/nazalog"
+	"github.com/ysjhlnu/lal/pkg/base"
+	"github.com/ysjhlnu/lal/pkg/hls"
+	"github.com/ysjhlnu/lal/pkg/rtsp"
 )
 
 const (
@@ -91,7 +91,7 @@ type HlsConfig struct {
 	UseMemoryAsDiskFlag bool `json:"use_memory_as_disk_flag"`
 	hls.MuxerConfig
 	SubSessionTimeoutMs int    `json:"sub_session_timeout_ms"`
-	SubSessionHashKey   string `json:"session_hash_key"`
+	SubSessionHashKey   string `json:"sub_session_hash_key"`
 }
 
 type RtspConfig struct {
